@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, Text, StatusBar } from "react-native";
 import { TabNavigator } from "react-navigation";
 import { Provider } from "mobx-react";
 import colors from "./common/colors";
@@ -35,6 +35,7 @@ const Tabs = TabNavigator(
 );
 
 function App() {
+	StatusBar.setBarStyle("light-content", true);
 	return (
 		<Provider {...stores}>
 			<Tabs />
