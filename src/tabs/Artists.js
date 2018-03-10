@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Text } from "react-native";
 import { StackNavigator } from "react-navigation";
 import ArtistsList from "../containers/ArtistsList";
-import Artist from "../components/Artist";
+import Artist from "../view/Artist";
 
 const stackNavigatorConfig = {
 	initialRouteName: "ArtistsList",
