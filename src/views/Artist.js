@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { Platform, StyleSheet, TouchableOpacity, ScrollView, Linking, Dimensions, View } from "react-native";
 import styled from "styled-components/native";
 import LinearGradient from "react-native-linear-gradient";
-import Header from "./header";
+import Header from "../components/header";
 import colors from "../common/colors";
-import { VideoIco, WwwIco, MusicIco, LikeIco } from "./icons";
+import { VideoIco, WwwIco, MusicIco, LikeIco } from "../components/icons";
+
+var PushNotification = require("react-native-push-notification");
 
 const vw = Dimensions.get("window").width;
 const Name = styled.Text`
@@ -86,12 +88,27 @@ const HeaderNav = styled.View`
 export default class Artist extends Component {
 	constructor() {
 		super();
+		PushNotification.configure({
+			// (optional) Called when Token is generated (iOS and Android)
+			onRegister: function(token) {
+				console.log("TOKEN:", token);
+			},
+
+			requestPermissions: true
+		});
 	}
 	openBrowser(url) {
 		Linking.openURL(url);
 	}
 	unescapeUrl(url) {
 		return url.replace("/", "/");
+	}
+	favouriteArtist(artist) {
+		PushNotification.localNotificationSchedule({
+			message: `${artist.title} - początek za 15 minut`, // (required)
+			date: new Date(Date.now() + 60 * 1000) // in 60 secs
+		});
+		this.props.navigation.state.params.favToggle();
 	}
 
 	render() {
@@ -113,12 +130,14 @@ export default class Artist extends Component {
 						}}
 					/>
 
-					<ArtistImage source={{ uri: this.unescapeUrl(artist.image) }} />
+					<ArtistImage source={{ uri: artist.image }} />
 					<ArtistHeaderInner>
-						<Name>{artist.title}</Name>
+						<Name>
+							{artist.title} {artist.favourite ? "ulubiony" : "nie"}
+						</Name>
 						<EventDate>{artist.date}</EventDate>
 						<HeaderNav>
-							<IconLeft onPress={() => alert("add to calendar")}>
+							<IconLeft onPress={() => this.favouriteArtist(artist.id)}>
 								<LikeIco size={18} />
 							</IconLeft>
 							{artist.www.length && (

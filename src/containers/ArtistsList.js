@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet, View, ScrollView, TouchableOpacity, Text } from "react-native";
+import { Platform, StyleSheet, View, ScrollView, TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { inject, observer } from "mobx-react";
 import ArtistSingleElement from "../components/artistItem";
 import { NavigationActions } from "react-navigation";
@@ -19,7 +19,12 @@ export default class ArtistsList extends Component {
 	navigate(artist) {
 		const navigateAction = NavigationActions.navigate({
 			routeName: "Artist",
-			params: { artist },
+			params: {
+				artist,
+				favToggle: () => {
+					this.props.artistsStore.toggleFav(artist.id);
+				}
+			},
 			action: NavigationActions.navigate({ routeName: "Artist" })
 		});
 		this.props.navigation.dispatch(navigateAction);
@@ -64,29 +69,32 @@ export default class ArtistsList extends Component {
 						<AZIco style={{ opacity: this.state.sort === "title" ? 1 : 0.5, marginLeft: 10 }} />
 					</TouchableOpacity>
 				</Header>
-				<ScrollView>
-					<View
-						style={{
-							flex: 1,
-							flexDirection: "row",
-							justifyContent: "center",
-							alignItems: "center",
-							flexWrap: "wrap"
-						}}
-					>
-						{this.props.artistsStore.artists.sort(this.sortArtists(this.state.sort)).map(artist => (
-							<ArtistSingleElement
-								key={artist.id}
-								artistName={artist.title}
-								artistDate={artist.date}
-								artistImage={this.unescapeUrl(artist.image)}
-								action={() => {
-									this.navigate(artist);
-								}}
-							/>
-						))}
-					</View>
-				</ScrollView>
+				{!this.props.artistsStore.isFetching && (
+					<ScrollView>
+						<View
+							style={{
+								flex: 1,
+								flexDirection: "row",
+								justifyContent: "center",
+								alignItems: "center",
+								flexWrap: "wrap"
+							}}
+						>
+							{this.props.artistsStore.artists.sort(this.sortArtists(this.state.sort)).map(artist => (
+								<ArtistSingleElement
+									key={artist.id}
+									artistName={artist.title + artist.favourite}
+									artistDate={artist.date}
+									artistImage={this.unescapeUrl(artist.image)}
+									action={() => {
+										this.navigate(artist);
+									}}
+								/>
+							))}
+						</View>
+					</ScrollView>
+				)}
+				{this.props.artistsStore.isFetching && <ActivityIndicator size="large" color="#444444" />}
 			</View>
 		);
 	}
