@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Component } from "react";
 import { Dimensions, Image } from "react-native";
 import styled from "styled-components/native";
 import colors from "../common/colors";
+import { fetchImage } from "../api/getBase";
 
 const vw = Dimensions.get("window").width;
 
@@ -33,11 +34,25 @@ const ArtistImage = styled.Image`
 `;
 const Gradient = styled.View``;
 
-export default function ArtistSingleElement(props) {
-	return (
-		<Container onPress={props.action}>
-			<ArtistImage source={{ uri: props.artistImage }} />
-			<Name>{props.artistName}</Name>
-		</Container>
-	);
+export default class ArtistSingleElement extends Component {
+	constructor() {
+		super();
+		this.state = { image: "" };
+	}
+	componentDidMount() {
+		fetchImage(this.props.artistImage)
+			.then(base64 => {
+				this.setState({ image: base64 });
+			})
+			.catch(() => {});
+	}
+	render() {
+		const props = this.props;
+		return (
+			<Container onPress={props.action}>
+				<ArtistImage source={{ uri: this.state.image }} />
+				<Name>{props.artistName}</Name>
+			</Container>
+		);
+	}
 }

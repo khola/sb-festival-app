@@ -21,9 +21,7 @@ export default class ArtistsList extends Component {
 			routeName: "Artist",
 			params: {
 				artist,
-				favToggle: () => {
-					this.props.artistsStore.toggleFav(artist.id);
-				}
+				favToggle: () => this.props.artistsStore.toggleFav(artist.id)
 			},
 			action: NavigationActions.navigate({ routeName: "Artist" })
 		});
@@ -75,22 +73,38 @@ export default class ArtistsList extends Component {
 							style={{
 								flex: 1,
 								flexDirection: "row",
-								justifyContent: "center",
+								justifyContent: "flex-start",
 								alignItems: "center",
 								flexWrap: "wrap"
 							}}
 						>
-							{this.props.artistsStore.artists.sort(this.sortArtists(this.state.sort)).map(artist => (
-								<ArtistSingleElement
-									key={artist.id}
-									artistName={artist.title + artist.favourite}
-									artistDate={artist.date}
-									artistImage={this.unescapeUrl(artist.image)}
-									action={() => {
-										this.navigate(artist);
-									}}
-								/>
-							))}
+							{this.props.filter === "all" &&
+								this.props.artistsStore.artists.sort(this.sortArtists(this.state.sort)).map(artist => (
+									<ArtistSingleElement
+										key={artist.id}
+										artistName={artist.title}
+										artistDate={artist.date}
+										artistImage={this.unescapeUrl(artist.image)}
+										action={() => {
+											this.navigate(artist);
+										}}
+									/>
+								))}
+							{this.props.filter === "myevents" &&
+								this.props.artistsStore.artists
+									.filter(artist => artist.favourite)
+									.sort(this.sortArtists(this.state.sort))
+									.map(artist => (
+										<ArtistSingleElement
+											key={artist.id}
+											artistName={artist.title}
+											artistDate={artist.date}
+											artistImage={this.unescapeUrl(artist.image)}
+											action={() => {
+												this.navigate(artist);
+											}}
+										/>
+									))}
 						</View>
 					</ScrollView>
 				)}

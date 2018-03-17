@@ -5,6 +5,7 @@ import { Provider } from "mobx-react";
 import colors from "./common/colors";
 import stores from "./stores";
 import ArtistsStack from "./tabs/Artists";
+import MyEventsStack from "./tabs/MyEvents";
 
 const EmptyScreen = () => {
 	return (
@@ -18,7 +19,7 @@ const Tabs = TabNavigator(
 	{
 		Events: { screen: ArtistsStack },
 		Places: { screen: EmptyScreen },
-		MyEvents: { screen: EmptyScreen },
+		MyEvents: { screen: MyEventsStack },
 		About: { screen: EmptyScreen }
 	},
 	{

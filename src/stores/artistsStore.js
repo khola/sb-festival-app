@@ -12,6 +12,7 @@ export default class ArtistsSingleElement {
 
 	downloadArtists() {
 		this.isFetching = true;
+
 		AsyncStorage.getItem("artists")
 			.then(result => {
 				let cachedValue = JSON.parse(result);
@@ -35,5 +36,6 @@ export default class ArtistsSingleElement {
 		newArtists[artistById].favourite = newArtists[artistById].favourite ? false : true;
 		this.artists = newArtists;
 		saveToStorage(newArtists);
+		return newArtists[artistById].favourite;
 	}
 }

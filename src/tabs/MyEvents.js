@@ -12,14 +12,14 @@ const stackNavigatorConfig = {
 	}
 };
 
-const AllArtists = props => {
-	return <ArtistsList filter="all" {...props} />;
+const MyEvents = props => {
+	return <ArtistsList filter="myevents" {...props} />;
 };
 
 const Stack = StackNavigator(
 	{
 		ArtistsList: {
-			screen: AllArtists
+			screen: MyEvents
 		},
 		Artist: {
 			screen: Artist
@@ -28,9 +28,9 @@ const Stack = StackNavigator(
 	stackNavigatorConfig
 );
 
-class ArtistsStack extends Component {
+class MyEventsStack extends Component {
 	static navigationOptions = {
-		title: "Wydarzenia"
+		title: "Mój ESB2018"
 	};
 
 	render() {
@@ -38,4 +38,4 @@ class ArtistsStack extends Component {
 	}
 }
 
-export default ArtistsStack;
+export default MyEventsStack;

@@ -4,7 +4,8 @@ import styled from "styled-components/native";
 import LinearGradient from "react-native-linear-gradient";
 import Header from "../components/header";
 import colors from "../common/colors";
-import { VideoIco, WwwIco, MusicIco, LikeIco } from "../components/icons";
+import { VideoIco, WwwIco, MusicIco, LikeIco, BackIco, UnlikeIco } from "../components/icons";
+import { fetchImage } from "../api/getBase";
 
 var PushNotification = require("react-native-push-notification");
 
@@ -85,17 +86,30 @@ const HeaderNav = styled.View`
 	margin-top: 20;
 `;
 
+const ButtonBack = styled.TouchableOpacity`
+	font-size: 14;
+	width: 35px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: 10;
+	position: absolute;
+	left: 0px;
+	top: 30px;
+
+	z-index: 1000;
+`;
+
 export default class Artist extends Component {
 	constructor() {
 		super();
 		PushNotification.configure({
-			// (optional) Called when Token is generated (iOS and Android)
-			onRegister: function(token) {
-				console.log("TOKEN:", token);
-			},
+			onRegister: function(token) {},
 
 			requestPermissions: true
 		});
+		this.state = { image: "", isfav: false };
 	}
 	openBrowser(url) {
 		Linking.openURL(url);
@@ -105,10 +119,23 @@ export default class Artist extends Component {
 	}
 	favouriteArtist(artist) {
 		PushNotification.localNotificationSchedule({
-			message: `${artist.title} - początek za 15 minut`, // (required)
-			date: new Date(Date.now() + 60 * 1000) // in 60 secs
+			message: `${artist.title} - początek za 15 minut`,
+			date: new Date(Date.now() + 60 * 1000)
 		});
-		this.props.navigation.state.params.favToggle();
+		let newState = this.props.navigation.state.params.favToggle();
+		this.setState({ image: this.state.image, favourite: newState });
+	}
+
+	componentDidMount() {
+		fetchImage(this.props.navigation.state.params.artist.image)
+			.then(base64 => {
+				this.setState({ image: base64, favourite: this.props.navigation.state.params.artist.favourite });
+			})
+			.catch(() => {});
+	}
+
+	goBack() {
+		this.props.navigation.goBack();
 	}
 
 	render() {
@@ -129,17 +156,24 @@ export default class Artist extends Component {
 							top: 0
 						}}
 					/>
-
-					<ArtistImage source={{ uri: artist.image }} />
+					<ButtonBack onPress={() => this.goBack()}>
+						<BackIco size={18} />
+					</ButtonBack>
+					<ArtistImage source={{ uri: this.state.image }} />
 					<ArtistHeaderInner>
-						<Name>
-							{artist.title} {artist.favourite ? "ulubiony" : "nie"}
-						</Name>
+						<Name>{artist.title}</Name>
 						<EventDate>{artist.date}</EventDate>
 						<HeaderNav>
-							<IconLeft onPress={() => this.favouriteArtist(artist.id)}>
-								<LikeIco size={18} />
-							</IconLeft>
+							{!this.state.favourite && (
+								<IconLeft onPress={() => this.favouriteArtist(artist.id)}>
+									<LikeIco size={18} />
+								</IconLeft>
+							)}
+							{this.state.favourite && (
+								<IconLeft onPress={() => this.favouriteArtist(artist.id)}>
+									<UnlikeIco size={18} />
+								</IconLeft>
+							)}
 							{artist.www.length && (
 								<Icon onPress={() => this.openBrowser(artist.www)}>
 									<WwwIco size={15} />
