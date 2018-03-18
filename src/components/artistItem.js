@@ -34,6 +34,29 @@ const ArtistImage = styled.Image`
 `;
 const Gradient = styled.View``;
 
+const ContainerSimple = styled.TouchableOpacity`
+	width: ${vw};
+	height: 80px;
+	padding: 20px;
+
+	justify-content: flex-start;
+	align-items: center;
+	flex-direction: row;
+	background: #fff;
+`;
+const ArtistImageSmall = styled.Image`
+	width: 60px;
+	height: 60px;
+	border-radius: 30px;
+	margin-right: 20px;
+`;
+const NameSmall = styled.Text`
+	font-size: 16;
+	text-align: right;
+	color: ${colors.darkGreen};
+	font-weight: 600;
+`;
+
 export default class ArtistSingleElement extends Component {
 	constructor() {
 		super();
@@ -48,11 +71,19 @@ export default class ArtistSingleElement extends Component {
 	}
 	render() {
 		const props = this.props;
+		console.log(props);
 		return (
-			<Container onPress={props.action}>
+			/*<Container onPress={props.action}>
 				<ArtistImage source={{ uri: this.state.image }} />
 				<Name>{props.artistName}</Name>
 			</Container>
+			*/
+			<ContainerSimple onPress={props.action} style={{ backgroundColor: props.isEven ? "#efefef" : "white" }}>
+				<ArtistImageSmall source={{ uri: this.state.image }} />
+				<NameSmall>
+					{props.artistName}, {props.artistDate}
+				</NameSmall>
+			</ContainerSimple>
 		);
 	}
 }

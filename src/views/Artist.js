@@ -118,12 +118,22 @@ export default class Artist extends Component {
 		return url.replace("/", "/");
 	}
 	favouriteArtist(artist) {
-		PushNotification.localNotificationSchedule({
-			message: `${artist.title} - początek za 15 minut`,
-			date: new Date(Date.now() + 60 * 1000)
-		});
-		let newState = this.props.navigation.state.params.favToggle();
-		this.setState({ image: this.state.image, favourite: newState });
+		if (!this.state.favourite) {
+			const dateNotification = new Date();
+			dateNotification.setTime((artist.timestamp + 45 * 60) * 1000);
+			console.log("dejt", dateNotification);
+			PushNotification.localNotificationSchedule({
+				id: artist.id,
+				message: `${artist.title} - początek za 15 minut`,
+				date: dateNotification
+			});
+			this.props.navigation.state.params.favToggle();
+			this.setState({ image: this.state.image, favourite: true });
+		} else {
+			PushNotification.cancelLocalNotifications({ id: artist.id });
+			this.props.navigation.state.params.favToggle();
+			this.setState({ image: this.state.image, favourite: false });
+		}
 	}
 
 	componentDidMount() {
@@ -165,12 +175,12 @@ export default class Artist extends Component {
 						<EventDate>{artist.date}</EventDate>
 						<HeaderNav>
 							{!this.state.favourite && (
-								<IconLeft onPress={() => this.favouriteArtist(artist.id)}>
+								<IconLeft onPress={() => this.favouriteArtist(artist)}>
 									<LikeIco size={18} />
 								</IconLeft>
 							)}
 							{this.state.favourite && (
-								<IconLeft onPress={() => this.favouriteArtist(artist.id)}>
+								<IconLeft onPress={() => this.favouriteArtist(artist)}>
 									<UnlikeIco size={18} />
 								</IconLeft>
 							)}

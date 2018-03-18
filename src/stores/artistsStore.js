@@ -9,6 +9,18 @@ saveToStorage = value => {
 export default class ArtistsSingleElement {
 	@observable artists = [];
 	@observable isFetching = false;
+	checkdate = "";
+
+	checkForUpdate(compare) {
+		fetchArtists().then(result => {
+			if (result.checkdate > compare.checkdate) {
+				this.artists = result.data.map((artist, index) => {
+					return { ...artist, favourite: compare.data[index].favourite };
+				});
+				this.checkdate = result.checkdate;
+			}
+		});
+	}
 
 	downloadArtists() {
 		this.isFetching = true;
@@ -16,15 +28,19 @@ export default class ArtistsSingleElement {
 		AsyncStorage.getItem("artists")
 			.then(result => {
 				let cachedValue = JSON.parse(result);
-				if (cachedValue.sort) {
-					this.artists = cachedValue;
+
+				if (cachedValue.checkdate) {
+					this.artists = cachedValue.data;
+					this.checkdate = cachedValue.checkdate;
 				}
+				this.checkForUpdate(cachedValue);
 				this.isFetching = false;
 			})
 			.catch(() => {
 				fetchArtists().then(result => {
-					this.artists = result;
+					this.artists = result.data;
 					this.isFetching = false;
+					this.checkdate = result.checkdate;
 					saveToStorage(result);
 				});
 			});
@@ -35,7 +51,7 @@ export default class ArtistsSingleElement {
 		const newArtists = [...this.artists];
 		newArtists[artistById].favourite = newArtists[artistById].favourite ? false : true;
 		this.artists = newArtists;
-		saveToStorage(newArtists);
+		saveToStorage({ checkdate: this.checkdate, data: newArtists });
 		return newArtists[artistById].favourite;
 	}
 }

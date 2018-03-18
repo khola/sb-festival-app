@@ -79,17 +79,21 @@ export default class ArtistsList extends Component {
 							}}
 						>
 							{this.props.filter === "all" &&
-								this.props.artistsStore.artists.sort(this.sortArtists(this.state.sort)).map(artist => (
-									<ArtistSingleElement
-										key={artist.id}
-										artistName={artist.title}
-										artistDate={artist.date}
-										artistImage={this.unescapeUrl(artist.image)}
-										action={() => {
-											this.navigate(artist);
-										}}
-									/>
-								))}
+								this.props.artistsStore.artists
+									.sort(this.sortArtists(this.state.sort))
+									.map((artist, index) => (
+										<ArtistSingleElement
+											key={artist.id}
+											artistName={artist.title}
+											artistDate={artist.date}
+											artistImage={this.unescapeUrl(artist.image)}
+											action={() => {
+												this.navigate(artist);
+											}}
+											sort={this.state.sort}
+											isEven={index % 2}
+										/>
+									))}
 							{this.props.filter === "myevents" &&
 								this.props.artistsStore.artists
 									.filter(artist => artist.favourite)
