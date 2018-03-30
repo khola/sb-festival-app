@@ -6,21 +6,15 @@ import colors from "./common/colors";
 import stores from "./stores";
 import ArtistsStack from "./tabs/Artists";
 import MyEventsStack from "./tabs/MyEvents";
-
-const EmptyScreen = () => {
-	return (
-		<View>
-			<Text>test</Text>
-		</View>
-	);
-};
+import About from "./tabs/About";
+import PlacesStack from "./tabs/Places";
 
 const Tabs = TabNavigator(
 	{
 		Events: { screen: ArtistsStack },
-		Places: { screen: EmptyScreen },
+		Places: { screen: PlacesStack },
 		MyEvents: { screen: MyEventsStack },
-		About: { screen: EmptyScreen }
+		About: { screen: About }
 	},
 	{
 		tabBarPosition: "bottom",
@@ -30,7 +24,9 @@ const Tabs = TabNavigator(
 			inactiveTintColor: colors.white,
 			inactiveBackgroundColor: colors.darkGreen,
 			style: { backgroundColor: colors.darkGreen, height: 60, padding: 0, margin: 0, border: "none" },
-			tabStyle: { margin: 0, padding: 5, height: 60 }
+			tabStyle: { margin: 0, padding: 5, height: 60 },
+			showIcon: true,
+			showLabel: true
 		}
 	}
 );

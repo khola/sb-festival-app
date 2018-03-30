@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, Image } from "react-native";
 import styled from "styled-components/native";
 import colors from "../common/colors";
 
@@ -13,9 +13,9 @@ const Container = styled.TouchableOpacity`
 	padding-left: 10px;
 	padding-right: 10px;
 	display: flex;
-	justify-content: center;
-	align-items: flex-end;
-	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
 `;
 
 const Nav = styled.View`
@@ -24,9 +24,15 @@ const Nav = styled.View`
 	flex-direction: row;
 `;
 
+const Logo = styled.Image`
+	width: 30;
+	height: 30;
+`;
+
 export default function Header(props) {
 	return (
 		<Container>
+			<Logo source={require("../assets/logo.png")} style={{ width: 30, height: 30 }} />
 			<Nav>{props.children}</Nav>
 		</Container>
 	);

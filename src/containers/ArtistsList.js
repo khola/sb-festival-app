@@ -11,7 +11,7 @@ import { CalendarIco, AZIco } from "../components/icons";
 export default class ArtistsList extends Component {
 	constructor() {
 		super();
-		this.state = { sort: "timestamp" };
+		this.state = { sort: "title" };
 	}
 	componentDidMount() {
 		this.props.artistsStore.downloadArtists();
@@ -84,6 +84,7 @@ export default class ArtistsList extends Component {
 									.map((artist, index) => (
 										<ArtistSingleElement
 											key={artist.id}
+											view={this.state.sort === "title" ? "square" : "row"}
 											artistName={artist.title}
 											artistDate={artist.date}
 											artistImage={this.unescapeUrl(artist.image)}
@@ -101,6 +102,7 @@ export default class ArtistsList extends Component {
 									.map(artist => (
 										<ArtistSingleElement
 											key={artist.id}
+											view={this.state.sort === "title" ? "square" : "row"}
 											artistName={artist.title}
 											artistDate={artist.date}
 											artistImage={this.unescapeUrl(artist.image)}

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, Image } from "react-native";
+import { Dimensions, Image, View } from "react-native";
 import styled from "styled-components/native";
 import colors from "../common/colors";
 import { fetchImage } from "../api/getBase";
@@ -71,19 +71,28 @@ export default class ArtistSingleElement extends Component {
 	}
 	render() {
 		const props = this.props;
-		console.log(props);
+
 		return (
-			/*<Container onPress={props.action}>
-				<ArtistImage source={{ uri: this.state.image }} />
-				<Name>{props.artistName}</Name>
-			</Container>
-			*/
-			<ContainerSimple onPress={props.action} style={{ backgroundColor: props.isEven ? "#efefef" : "white" }}>
-				<ArtistImageSmall source={{ uri: this.state.image }} />
-				<NameSmall>
-					{props.artistName}, {props.artistDate}
-				</NameSmall>
-			</ContainerSimple>
+			<View>
+				{props.view === "square" && (
+					<Container onPress={props.action}>
+						<ArtistImage source={{ uri: this.state.image }} />
+						<Name>{props.artistName}</Name>
+					</Container>
+				)}
+
+				{props.view === "row" && (
+					<ContainerSimple
+						onPress={props.action}
+						style={{ backgroundColor: props.isEven ? "#efefef" : "white" }}
+					>
+						<ArtistImageSmall source={{ uri: this.state.image }} />
+						<NameSmall>
+							{props.artistName}, {props.artistDate}
+						</NameSmall>
+					</ContainerSimple>
+				)}
+			</View>
 		);
 	}
 }

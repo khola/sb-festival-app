@@ -121,7 +121,6 @@ export default class Artist extends Component {
 		if (!this.state.favourite) {
 			const dateNotification = new Date();
 			dateNotification.setTime((artist.timestamp + 45 * 60) * 1000);
-			console.log("dejt", dateNotification);
 			PushNotification.localNotificationSchedule({
 				id: artist.id,
 				message: `${artist.title} - początek za 15 minut`,

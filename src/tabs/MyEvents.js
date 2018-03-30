@@ -3,6 +3,8 @@ import { View, Text } from "react-native";
 import { StackNavigator } from "react-navigation";
 import ArtistsList from "../containers/ArtistsList";
 import Artist from "../views/Artist";
+import { LikeIco } from "../components/icons";
+import colors from "../common/colors";
 
 const stackNavigatorConfig = {
 	initialRouteName: "ArtistsList",
@@ -30,7 +32,8 @@ const Stack = StackNavigator(
 
 class MyEventsStack extends Component {
 	static navigationOptions = {
-		title: "Mój ESB2018"
+		title: "Mój ESB2018",
+		tabBarIcon: ({ focused, tintColor }) => <LikeIco color={focused ? colors.black : colors.white} size={20} />
 	};
 
 	render() {
