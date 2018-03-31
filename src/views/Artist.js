@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Platform, StyleSheet, TouchableOpacity, ScrollView, Linking, Dimensions, View } from "react-native";
 import styled from "styled-components/native";
+import colors from "../common/colors";
 import LinearGradient from "react-native-linear-gradient";
 import Header from "../components/header";
-import colors from "../common/colors";
+
 import { VideoIco, WwwIco, MusicIco, LikeIco, BackIco, UnlikeIco } from "../components/icons";
 import { fetchImage } from "../api/getBase";
 
@@ -151,6 +152,7 @@ export default class Artist extends Component {
 		const artist = this.props.navigation.state.params.artist;
 		const descHeight = Dimensions.get("window").height - Dimensions.get("window").width - 60;
 		const vw = Dimensions.get("window");
+		console.log(artist);
 		return (
 			<View>
 				<ArtistHeader>
@@ -183,17 +185,17 @@ export default class Artist extends Component {
 									<UnlikeIco size={18} />
 								</IconLeft>
 							)}
-							{artist.www.length && (
+							{artist.www.length > 0 && (
 								<Icon onPress={() => this.openBrowser(artist.www)}>
 									<WwwIco size={15} />
 								</Icon>
 							)}
-							{artist.video.length && (
+							{artist.video.length > 0 && (
 								<Icon onPress={() => this.openBrowser(artist.video)}>
 									<VideoIco size={15} />
 								</Icon>
 							)}
-							{artist.music.length && (
+							{artist.music.length > 0 && (
 								<Icon onPress={() => this.openBrowser(artist.music)}>
 									<MusicIco size={15} />
 								</Icon>

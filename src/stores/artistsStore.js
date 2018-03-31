@@ -13,6 +13,7 @@ export default class ArtistsSingleElement {
 
 	checkForUpdate(compare) {
 		fetchArtists().then(result => {
+			console.log("check for update", compare, result);
 			if (result.checkdate > compare.checkdate) {
 				this.artists = result.data.map((artist, index) => {
 					return { ...artist, favourite: compare.data[index].favourite };
@@ -33,6 +34,7 @@ export default class ArtistsSingleElement {
 					this.artists = cachedValue.data;
 					this.checkdate = cachedValue.checkdate;
 				}
+
 				this.checkForUpdate(cachedValue);
 				this.isFetching = false;
 			})

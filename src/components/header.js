@@ -1,7 +1,8 @@
 import React from "react";
-import { Dimensions, Image } from "react-native";
+import { Dimensions, Image, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import colors from "../common/colors";
+import { BackIco } from "./icons";
 
 const vw = Dimensions.get("window").width;
 
@@ -29,11 +30,18 @@ const Logo = styled.Image`
 	height: 30;
 `;
 
-export default function Header(props) {
+const Header = props => {
 	return (
 		<Container>
-			<Logo source={require("../assets/logo.png")} style={{ width: 30, height: 30 }} />
+			{props.backAction && (
+				<TouchableOpacity onPress={props.backAction}>
+					<BackIco size={18} />
+				</TouchableOpacity>
+			)}
+			{!props.backAction && <Logo source={require("../assets/logo.png")} style={{ width: 30, height: 30 }} />}
 			<Nav>{props.children}</Nav>
 		</Container>
 	);
-}
+};
+
+export default Header;

@@ -5,6 +5,8 @@ import ArtistsList from "../containers/ArtistsList";
 import Artist from "../views/Artist";
 import { CalendarIco } from "../components/icons";
 import colors from "../common/colors";
+import { inject, observer } from "mobx-react";
+
 const stackNavigatorConfig = {
 	initialRouteName: "ArtistsList",
 	headerMode: "none",
@@ -29,11 +31,17 @@ const Stack = StackNavigator(
 	stackNavigatorConfig
 );
 
+@inject("artistsStore")
+@observer
 class ArtistsStack extends Component {
 	static navigationOptions = {
 		title: "Wydarzenia",
 		tabBarIcon: ({ focused, tintColor }) => <CalendarIco color={focused ? colors.black : colors.white} />
 	};
+
+	componentDidMount() {
+		this.props.artistsStore.downloadArtists();
+	}
 
 	render() {
 		return <Stack />;
