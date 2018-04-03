@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "98619228269",
+    "firebase_url": "https://enea-spring-break.firebaseio.com",
+    "project_id": "enea-spring-break"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98619228269:android:c571bfcccd15141a",
+        "android_client_info": {
+          "package_name": "com.esb2018"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "98619228269-3s4jdqbtf5ro43j7penho9199kiiitvn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHOHnoMwmVCHNy-fzjpObIpalKmQC53ks"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

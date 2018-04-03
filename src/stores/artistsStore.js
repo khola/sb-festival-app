@@ -13,10 +13,9 @@ export default class ArtistsSingleElement {
 
 	checkForUpdate(compare) {
 		fetchArtists().then(result => {
-			console.log("check for update", compare, result);
 			if (result.checkdate > compare.checkdate) {
 				this.artists = result.data.map((artist, index) => {
-					return { ...artist, favourite: compare.data[index].favourite };
+					return { ...artist, favourite: compare.data[index] ? compare.data[index].favourite : false };
 				});
 				this.checkdate = result.checkdate;
 			}
@@ -39,12 +38,14 @@ export default class ArtistsSingleElement {
 				this.isFetching = false;
 			})
 			.catch(() => {
-				fetchArtists().then(result => {
-					this.artists = result.data;
-					this.isFetching = false;
-					this.checkdate = result.checkdate;
-					saveToStorage(result);
-				});
+				fetchArtists()
+					.then(result => {
+						this.artists = result.data;
+						this.isFetching = false;
+						this.checkdate = result.checkdate;
+						saveToStorage(result);
+					})
+					.catch(error => alert("Błąd pobierania listy artystów"));
 			});
 	}
 

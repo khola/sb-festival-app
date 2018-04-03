@@ -7,7 +7,11 @@ import stores from "./stores";
 import ArtistsStack from "./tabs/Artists";
 import MyEventsStack from "./tabs/MyEvents";
 import About from "./tabs/About";
-import PlacesStack from "./tabs/Places";
+import { PlacesStack } from "./tabs/Places";
+import DeviceInfo from "react-native-device-info";
+
+const deviceLocale = DeviceInfo.getDeviceLocale();
+global.polish = deviceLocale.includes("pl");
 
 const Tabs = TabNavigator(
 	{
@@ -17,9 +21,10 @@ const Tabs = TabNavigator(
 		About: { screen: About }
 	},
 	{
+		...TabNavigator.Presets.iOSBottomTabs,
 		tabBarPosition: "bottom",
 		tabBarOptions: {
-			activeTintColor: colors.black,
+			activeTintColor: colors.white,
 			activeBackgroundColor: colors.green,
 			inactiveTintColor: colors.white,
 			inactiveBackgroundColor: colors.darkGreen,

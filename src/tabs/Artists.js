@@ -3,9 +3,15 @@ import { View, Text } from "react-native";
 import { StackNavigator } from "react-navigation";
 import ArtistsList from "../containers/ArtistsList";
 import Artist from "../views/Artist";
-import { CalendarIco } from "../components/icons";
+import { PlacesList, ArtistsListFiltered } from "./Places";
+import { MusicIco } from "../components/icons";
 import colors from "../common/colors";
 import { inject, observer } from "mobx-react";
+
+import DeviceInfo from "react-native-device-info";
+
+const deviceLocale = DeviceInfo.getDeviceLocale();
+const polish = deviceLocale.includes("pl");
 
 const stackNavigatorConfig = {
 	initialRouteName: "ArtistsList",
@@ -26,6 +32,12 @@ const Stack = StackNavigator(
 		},
 		Artist: {
 			screen: Artist
+		},
+		PlacesList: {
+			screen: PlacesList
+		},
+		ArtistsListFiltered: {
+			screen: ArtistsListFiltered
 		}
 	},
 	stackNavigatorConfig
@@ -35,8 +47,8 @@ const Stack = StackNavigator(
 @observer
 class ArtistsStack extends Component {
 	static navigationOptions = {
-		title: "Wydarzenia",
-		tabBarIcon: ({ focused, tintColor }) => <CalendarIco color={focused ? colors.black : colors.white} />
+		title: polish ? "Wydarzenia" : "Events",
+		tabBarIcon: ({ focused, tintColor }) => <MusicIco color={colors.white} size={20} />
 	};
 
 	componentDidMount() {

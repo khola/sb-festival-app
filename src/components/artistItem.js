@@ -38,7 +38,7 @@ const ContainerSimple = styled.TouchableOpacity`
 	width: ${vw};
 	height: 80px;
 	padding: 20px;
-
+	margin-bottom: 1px;
 	justify-content: flex-start;
 	align-items: center;
 	flex-direction: row;
@@ -52,43 +52,71 @@ const ArtistImageSmall = styled.Image`
 `;
 const NameSmall = styled.Text`
 	font-size: 16;
-	text-align: right;
+	text-align: left;
 	color: ${colors.darkGreen};
 	font-weight: 600;
+	width: ${vw - 100};
+`;
+
+const ProgressBar = styled.View`
+	background: ${colors.black};
+	opacity: 0.2;
+	z-index: 0;
+	position: absolute;
+	height: 80px;
+	width: 100%;
 `;
 
 export default class ArtistSingleElement extends Component {
 	constructor() {
 		super();
-		this.state = { image: "" };
+		this.state = { image: "", timeStatus: 0 };
+	}
+	calculateShowTimeStatus() {
+		const now = Date.now();
+
+		const eventStart = this.props.artist.timestamp * 1000;
+		const eventLength = this.props.artist.showlength * 1000;
+		const eventEnd = eventStart + eventLength;
+
+		let timeStatus = 0;
+		if (now > eventEnd) {
+			timeStatus = 1;
+		} else if (now > eventStart) {
+			timeStatus = (now - eventStart) / eventLength;
+		}
+
+		this.setState({ ...this.state, timeStatus });
 	}
 	componentDidMount() {
-		fetchImage(this.props.artistImage)
+		fetchImage(this.props.artist.image)
 			.then(base64 => {
-				this.setState({ image: base64 });
+				this.setState({ ...this.state, image: base64 });
 			})
 			.catch(() => {});
+
+		this.calculateShowTimeStatus();
 	}
 	render() {
-		const props = this.props;
+		const props = this.props.artist;
+		const view = this.props.view;
+		const action = this.props.action;
 
 		return (
 			<View>
-				{props.view === "square" && (
-					<Container onPress={props.action}>
+				{view === "square" && (
+					<Container onPress={action}>
 						<ArtistImage source={{ uri: this.state.image }} />
-						<Name>{props.artistName}</Name>
+						<Name>{props.title}</Name>
 					</Container>
 				)}
 
-				{props.view === "row" && (
-					<ContainerSimple
-						onPress={props.action}
-						style={{ backgroundColor: props.isEven ? "#efefef" : "white" }}
-					>
+				{view === "row" && (
+					<ContainerSimple onPress={action}>
+						<ProgressBar style={{ width: this.state.timeStatus * vw }} />
 						<ArtistImageSmall source={{ uri: this.state.image }} />
-						<NameSmall>
-							{props.artistName}, {props.artistDate}
+						<NameSmall numberOfLines={1}>
+							{props.title}, {props.hour}
 						</NameSmall>
 					</ContainerSimple>
 				)}

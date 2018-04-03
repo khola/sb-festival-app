@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet, TouchableOpacity, ScrollView, Linking, Dimensions, View } from "react-native";
+import { Platform, StyleSheet, TouchableOpacity, ScrollView, Linking, Dimensions, View, Text } from "react-native";
 import styled from "styled-components/native";
 import colors from "../common/colors";
 import LinearGradient from "react-native-linear-gradient";
 import Header from "../components/header";
-
+import { NavigationActions } from "react-navigation";
 import { VideoIco, WwwIco, MusicIco, LikeIco, BackIco, UnlikeIco } from "../components/icons";
 import { fetchImage } from "../api/getBase";
+import places from "../api/places";
 
 var PushNotification = require("react-native-push-notification");
 
@@ -48,7 +49,7 @@ const IconLeft = styled.TouchableOpacity`
 	align-self: flex-start;
 `;
 
-const EventDate = styled.Text`
+const EventDate = styled.TouchableOpacity`
 	font-size: 16;
 	text-align: center;
 	color: ${colors.white};
@@ -97,7 +98,7 @@ const ButtonBack = styled.TouchableOpacity`
 	margin-left: 10;
 	position: absolute;
 	left: 0px;
-	top: 30px;
+	top: ${Platform.OS === "ios" ? "30" : "10"}
 
 	z-index: 1000;
 `;
@@ -121,7 +122,7 @@ export default class Artist extends Component {
 	favouriteArtist(artist) {
 		if (!this.state.favourite) {
 			const dateNotification = new Date();
-			dateNotification.setTime((artist.timestamp + 45 * 60) * 1000);
+			dateNotification.setTime((artist.timestamp - 15 * 60) * 1000);
 			PushNotification.localNotificationSchedule({
 				id: artist.id,
 				message: `${artist.title} - początek za 15 minut`,
@@ -148,11 +149,26 @@ export default class Artist extends Component {
 		this.props.navigation.goBack();
 	}
 
+	showClub() {
+		const navigateAction = NavigationActions.navigate({
+			routeName: "PlacesList",
+			params: {
+				searchPhrase: places.find(place => place.id == this.props.navigation.state.params.artist.clubId).name
+			},
+			action: NavigationActions.navigate({ routeName: "PlacesList" })
+		});
+		this.props.navigation.dispatch(navigateAction);
+	}
+	stripText(old) {
+		return old.replace("&nbsp;", "");
+	}
 	render() {
 		const artist = this.props.navigation.state.params.artist;
 		const descHeight = Dimensions.get("window").height - Dimensions.get("window").width - 60;
 		const vw = Dimensions.get("window");
-		console.log(artist);
+		const place = places.find(place => place.id == artist.clubId)
+			? places.find(place => place.id == artist.clubId).name
+			: "";
 		return (
 			<View>
 				<ArtistHeader>
@@ -173,7 +189,12 @@ export default class Artist extends Component {
 					<ArtistImage source={{ uri: this.state.image }} />
 					<ArtistHeaderInner>
 						<Name>{artist.title}</Name>
-						<EventDate>{artist.date}</EventDate>
+						<EventDate onPress={() => this.showClub()}>
+							<Text style={{ color: colors.white }}>
+								{global.polish ? artist.date : artist.dateeng}, {place}
+							</Text>
+						</EventDate>
+
 						<HeaderNav>
 							{!this.state.favourite && (
 								<IconLeft onPress={() => this.favouriteArtist(artist)}>
@@ -204,7 +225,9 @@ export default class Artist extends Component {
 					</ArtistHeaderInner>
 				</ArtistHeader>
 				<ScrollView style={{ backgroundColor: "#ffffff", height: descHeight }}>
-					<Desc style={{ padding: 20 }}>{artist.desc}</Desc>
+					<Desc style={{ padding: 20, paddingBottom: 200 }}>
+						{global.polish ? this.stripText(artist.desc) : this.stripText(artist.descen)}
+					</Desc>
 				</ScrollView>
 			</View>
 		);
