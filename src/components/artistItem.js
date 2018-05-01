@@ -98,10 +98,8 @@ export default class ArtistSingleElement extends Component {
 		this.calculateShowTimeStatus();
 	}
 	render() {
-		const props = this.props.artist;
-		const view = this.props.view;
-		const action = this.props.action;
-
+		const { props, view, action } =  this.props;
+		
 		return (
 			<View>
 				{view === "square" && (
